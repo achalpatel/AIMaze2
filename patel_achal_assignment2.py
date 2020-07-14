@@ -158,23 +158,20 @@ class Board:
         return np.array(ones_list)
 
 
-b = Board("verySmallMaze.lay","%"," ", "P", ".")
+b = Board("smallMaze.lay","%"," ", "P", ".")
 b.readFile()
 b.createNumberedMatrix()
 b.initFinalMat()
 b.addValues()
 b.printFinalMatrix()
-# start_ind = b.getStartPos()
-# end_ind = b.getEndPos()
+start_ind = b.getStartPos()
+end_ind = b.getEndPos()
 # print(start_ind, end_ind)
-
-# print("start:", start_ind)
-# print("end ",end_ind)
 # solution_mat = b.readAnswerMatrix("bigMatrix.txt")
 # result_mat = b.getOnesPos()
 # print(np.array_equal(solution_mat,result_mat))
 # print("-----------------------------------------------------")
 # print("-----------------------------------------------------")
 # print("-----------------------------------------------------")
-# print(b.searchDFS(start_ind, end_ind))
+print(b.searchDFS(start_ind, end_ind))
 
