@@ -2,7 +2,6 @@
 # Name - Achal Patel
 # Student Id - 026598245
 
-
 import numpy as np
 import sys
 np.set_printoptions(threshold=sys.maxsize)
@@ -100,31 +99,33 @@ class Board:
                 if(self.matrix[i][j]==self.char_end):
                     return self.number_matrix[i][j]
 
-    def searchDFS(self, startPos, endPos):
-        visited=[]
-        path=[]        
-        visited.append(startPos)
+    def searchDFS(self, startPos, endPos):        
+        path=[]
+        # visited.append(startPos)
+        visited=set()
+        visited.add(startPos)
         for i in range(0, self.final_matrix[startPos].shape[0]):
             if(self.final_matrix[startPos][i] == 1 and i not in visited):
-                visited.append(i)
-                # print(visited)
+                # visited.append(i)                            
+                visited.add(i)            
                 if(self.search_rec(i, visited, path, endPos)):
                     path.append(i)
                     path.append(startPos)
                     return path
+                    
+        return np.array(path)
         
 
     def search_rec(self, number, visited, path, endPos):
         if(number==endPos):
-            return True
-        print(number, visited)
+            return True        
         for i in range(0, self.final_matrix[number].shape[0]):
             if(self.final_matrix[number][i] == 1 and (i not in visited)):
-                visited.append(i)
+                # visited.append(i)                
+                visited.add(i)            
                 if(self.search_rec(i, visited, path, endPos)):
-                    path.append(i) 
+                    path.append(i)                    
                     return True
-        
         return False
 
         
@@ -158,15 +159,15 @@ class Board:
         return np.array(ones_list)
 
 
-b = Board("smallMaze.lay","%"," ", "P", ".")
+b = Board("custom.lay","%"," ", "P", ".")
 b.readFile()
 b.createNumberedMatrix()
 b.initFinalMat()
 b.addValues()
-b.printFinalMatrix()
+# b.printFinalMatrix()
 start_ind = b.getStartPos()
 end_ind = b.getEndPos()
-# print(start_ind, end_ind)
+print(start_ind, end_ind)
 # solution_mat = b.readAnswerMatrix("bigMatrix.txt")
 # result_mat = b.getOnesPos()
 # print(np.array_equal(solution_mat,result_mat))
