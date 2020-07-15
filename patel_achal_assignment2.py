@@ -62,6 +62,14 @@ class Board:
             return self.matrix[m][n]    
         except IndexError:
             return None
+
+    def getIndexofNumber(self, number):
+        try:
+            index_i = number//self.col_size
+            index_j = number%self.col_size
+            return (index_i, index_j)
+        except IndexError:
+            return None
         
     
     def initFinalMat(self):
@@ -139,17 +147,18 @@ class Board:
         found = False
         while queue and not found:
             pop_value = queue.pop()
-            print("queueu : ",queue)
+            # print("queueu : ",queue)
             for i in range(0, self.final_matrix[pop_value].shape[0]):
                 if(self.final_matrix[pop_value][i] == 1 and (i not in visited_dict)):                    
                     queue.append(i)
                     visited_dict[i]=pop_value                    
-                    print("i:",i, "dict : ",visited_dict, queue)
+                    # print("i:",i, "dict : ",visited_dict, queue)
                     if(i==endPos):
                         found = True
                         break
         if(not found):
             print("No solution")
+            return None
         return visited_dict
 
     def traverseBFS(self, visited_dict, endPos):
@@ -168,7 +177,12 @@ class Board:
         return path
 
 
-    
+    def printDots(self, path):
+        local_output = self.matrix
+        for values in path:            
+            local_i, local_j = self.getIndexofNumber(values)
+            local_output[local_i][local_j] = "."
+        return np.array(local_output)
 
     # Testing purpose
     def getOnesPos(self):
@@ -200,7 +214,7 @@ class Board:
         return np.array(ones_list)
 
 
-b = Board("custom.lay","%"," ", "P", ".")
+b = Board("smallMaze.lay","%"," ", "P", ".")
 b.readFile()
 b.createNumberedMatrix()
 b.initFinalMat()
@@ -217,5 +231,7 @@ print(start_ind, end_ind)
 # print("-----------------------------------------------------")
 print(b.searchDFS(start_ind, end_ind))
 traversing_dict = b.bfsSearch(start_ind,end_ind)
-print(b.traverseBFS(traversing_dict, end_ind))
-
+bfs_path = b.traverseBFS(traversing_dict, end_ind)
+# print(bfs_path)
+bfs_dots = b.printDots(bfs_path)
+print(bfs_dots)
