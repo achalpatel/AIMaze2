@@ -128,7 +128,48 @@ class Board:
                     return True
         return False
 
-        
+    
+    # BFS search traversal
+    def bfsSearch(self, startPos, endPos):
+        # visited dictionary storing value of Parent
+        visited_dict={}
+        queue = []
+        queue.append(startPos)
+        visited_dict[startPos]=None
+        found = False
+        while queue and not found:
+            pop_value = queue.pop()
+            print("queueu : ",queue)
+            for i in range(0, self.final_matrix[pop_value].shape[0]):
+                if(self.final_matrix[pop_value][i] == 1 and (i not in visited_dict)):                    
+                    queue.append(i)
+                    visited_dict[i]=pop_value                    
+                    print("i:",i, "dict : ",visited_dict, queue)
+                    if(i==endPos):
+                        found = True
+                        break
+        if(not found):
+            print("No solution")
+        return visited_dict
+
+    def traverseBFS(self, visited_dict, endPos):
+        path=[]
+        complete=False
+        value = visited_dict[endPos]
+        path.append(endPos)
+        path.append(value)
+        while not complete:
+            parent = visited_dict[value]
+            path.append(parent)
+            value=parent
+            if(parent == None):
+                complete=True
+                path.pop()
+        return path
+
+
+    
+
     # Testing purpose
     def getOnesPos(self):
         l=[]
@@ -175,4 +216,6 @@ print(start_ind, end_ind)
 # print("-----------------------------------------------------")
 # print("-----------------------------------------------------")
 print(b.searchDFS(start_ind, end_ind))
+traversing_dict = b.bfsSearch(start_ind,end_ind)
+print(b.traverseBFS(traversing_dict, end_ind))
 
