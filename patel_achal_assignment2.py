@@ -97,16 +97,14 @@ class Board:
         min_v = None
         current_v=start_v
         while min_value>=0:
-            for ver in current_v.get_connections():                
-                print("ver->",ver)
+            for ver in current_v.get_connections():                            
                 v = self.myGraph.vertex[ver]
                 if v.heuristic <= min_value:
                     min_v = v
                     min_value = v.heuristic
             path.append(min_v.get_id())
             if(min_value==0):
-                break
-            print(min_v.get_id())
+                break            
             current_v = min_v
         return path
 
@@ -268,7 +266,7 @@ class Board:
         return np.array(ones_list)
 
 
-b = Board("custom.lay","%"," ", "P", ".")
+b = Board("mediumMaze.lay","%"," ", "P", ".")
 b.readFile()
 b.createNumberedMatrix()
 start_ind = b.getStartPos()
@@ -278,6 +276,10 @@ b.createEdges()
 
 b.countHeuristicStart(end_ind)
 # b.displayGraphSummary()
-print(b.astarSearch(start_ind))
+path = b.astarSearch(start_ind)
+printed_out = b.printDots(path)
+# np.savetxt(sys.stdout.buffer, printed_out[0], fmt="%")
+for line in printed_out:
+    print(' '.join(map(str, line)))
 
 
