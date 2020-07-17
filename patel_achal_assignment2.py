@@ -87,7 +87,28 @@ class Board:
                     neigh_v.heuristic = popped_v.heuristic + self.EDGE_WEIGHT
                     queue.append(neigh_v)
                     visit_set.add(neigh_data)
-                           
+
+
+    def astarSearch(self, start_pos):
+        path =[]
+        path.append(start_pos)
+        start_v = self.myGraph.vertex[start_pos]
+        min_value = math.inf
+        min_v = None
+        current_v=start_v
+        while min_value>=0:
+            for ver in current_v.get_connections():                
+                print("ver->",ver)
+                v = self.myGraph.vertex[ver]
+                if v.heuristic <= min_value:
+                    min_v = v
+                    min_value = v.heuristic
+            path.append(min_v.get_id())
+            if(min_value==0):
+                break
+            print(min_v.get_id())
+            current_v = min_v
+        return path
 
     # This method takes index(i, j) and returns the element at that position from the matrix
     def getElementFromMatrix(self, m, n):
@@ -256,6 +277,7 @@ print(start_ind, end_ind)
 b.createEdges()
 
 b.countHeuristicStart(end_ind)
-b.displayGraphSummary()
+# b.displayGraphSummary()
+print(b.astarSearch(start_ind))
 
 
