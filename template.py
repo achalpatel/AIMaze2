@@ -5,8 +5,6 @@
 import numpy as np
 import sys
 np.set_printoptions(threshold=sys.maxsize)
-from Vertex import Vertex
-from Graph import Graph
 
 class Board:
     # Constructor initialized with the input file, Obstacle character, 
@@ -212,6 +210,21 @@ class Board:
 b = Board("smallMaze.lay","%"," ", "P", ".")
 b.readFile()
 b.createNumberedMatrix()
+b.initFinalMat()
+b.addValues()
+# b.printFinalMatrix()
 start_ind = b.getStartPos()
 end_ind = b.getEndPos()
 print(start_ind, end_ind)
+# solution_mat = b.readAnswerMatrix("bigMatrix.txt")
+# result_mat = b.getOnesPos()
+# print(np.array_equal(solution_mat,result_mat))
+# print("-----------------------------------------------------")
+# print("-----------------------------------------------------")
+# print("-----------------------------------------------------")
+print(b.searchDFS(start_ind, end_ind))
+traversing_dict = b.bfsSearch(start_ind,end_ind)
+bfs_path = b.traverseBFS(traversing_dict, end_ind)
+# print(bfs_path)
+bfs_dots = b.printDots(bfs_path)
+print(bfs_dots)
