@@ -7,8 +7,13 @@ class Graph():
         super().__init__()
         self.vertex = {}
 
+    def create_vertex(self, data):
+        v = Vertex(data)
+        self.add_vertex(v)
+        return v
+
     def add_vertex(self, vertex):
-        self.vertex[vertex] = vertex
+        self.vertex[vertex.get_id()] = vertex
 
     def get_vertex(self, vertex):
         return self.vertex[vertex]
@@ -16,17 +21,24 @@ class Graph():
     def get_vertices(self):
         return self.vertex
 
-    def add_edge(self, vertex_from, vertex_to, weight):
-        if(self.vertex[vertex_from]==None):
-            self.add_vertex(vertex_from)
-        if(self.vertex[vertex_to]==None):
-            self.add_vertex(vertex_to)
+    def add_edge(self, data_from, data_to, weight):
+        if(data_from not in self.vertex.keys()):
+            vertex_from = self.create_vertex(data_from)
+        else:
+            vertex_from = self.vertex[data_from]
+        if(data_to not in self.vertex.keys()):
+            vertex_to = self.create_vertex(data_to)
+        else:
+            vertex_to = self.vertex[data_to]
+        # print("--",vertex_from.get_id(), data_to)    
         vertex_from.add_neighboor(vertex_to,weight)
+        
 
     def graph_summary(self):
         print("Graph Summary :")
+        
         for ver in self.get_vertices():
-            print("For vertex ",ver.get_id()," -> ",ver.get_connections())
+            print("For vertex ",ver, "->", self.vertex[ver].get_connections())
 
 
 

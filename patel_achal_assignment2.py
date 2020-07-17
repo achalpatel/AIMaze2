@@ -12,13 +12,16 @@ class Board:
     # Constructor initialized with the input file, Obstacle character, 
     # free space character, Begin position character and the End position
     # character
+    EDGE_WEIGHT=1
     def __init__(self, file, char_obs, char_free, char_start, char_end):
         super().__init__()
         self.file=file
         self.char_obstacle=char_obs
-        self.char_freeway=char_free
+        self.char_free=char_free
         self.char_start=char_start
         self.char_end=char_end
+        self.myGraph = Graph()
+        
 
     # Reads the input file and creates a matrix of characters named as matrix .
     def readFile(self):
@@ -49,7 +52,24 @@ class Board:
             low_x=high_x
 
         self.number_matrix=np.array(t)
+
+    def createEdges(self):
+        for i in range(0, self.row_size):
+            for j in range(0, self.col_size):
+                num = self.number_matrix[i][j]
+                char = self.matrix[i][j]
+                if(char!=self.char_obstacle):
+                    if(i-1>=0 and self.matrix[i-1][j]!=self.char_obstacle):
+                        self.myGraph.add_edge(num, self.number_matrix[i-1][j], self.EDGE_WEIGHT)
+                    if(i+1<=self.row_size-1 and self.matrix[i+1][j]!=self.char_obstacle):                                              
+                       self.myGraph.add_edge(num, self.number_matrix[i+1][j], self.EDGE_WEIGHT)
+                    if(j-1>=0 and self.matrix[i][j-1]!=self.char_obstacle):                                              
+                       self.myGraph.add_edge(num, self.number_matrix[i][j-1], self.EDGE_WEIGHT)
+                    if(j+1<=self.col_size-1 and self.matrix[i][j+1]!=self.char_obstacle):                                              
+                       self.myGraph.add_edge(num, self.number_matrix[i][j+1], self.EDGE_WEIGHT)
         
+    def displayGraphSummary(self):
+        self.myGraph.graph_summary()
     
     # This method takes index(i, j) and returns the element at that position from the matrix
     def getElementFromMatrix(self, m, n):
@@ -209,9 +229,13 @@ class Board:
         return np.array(ones_list)
 
 
-b = Board("smallMaze.lay","%"," ", "P", ".")
+b = Board("custom.lay","%"," ", "P", ".")
 b.readFile()
 b.createNumberedMatrix()
 start_ind = b.getStartPos()
 end_ind = b.getEndPos()
 print(start_ind, end_ind)
+b.createEdges()
+b.displayGraphSummary()
+
+
