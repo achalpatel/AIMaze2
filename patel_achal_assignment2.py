@@ -4,6 +4,7 @@
 
 import numpy as np
 import sys
+import math
 np.set_printoptions(threshold=sys.maxsize)
 from Vertex import Vertex
 from Graph import Graph
@@ -71,6 +72,23 @@ class Board:
     def displayGraphSummary(self):
         self.myGraph.graph_summary()
     
+    def countHeuristicStart(self, final_pos):
+        visit_set = set()
+        queue = []
+        goal_vert = self.myGraph.vertex[final_pos]
+        goal_vert.heuristic = 0
+        queue.append(goal_vert)
+        visit_set.add(goal_vert.get_id())        
+        while queue:
+            popped_v = queue.pop(0)            
+            for neigh_data in popped_v.get_connections():
+                if(neigh_data not in visit_set):
+                    neigh_v = self.myGraph.vertex[neigh_data]
+                    neigh_v.heuristic = popped_v.heuristic + self.EDGE_WEIGHT
+                    queue.append(neigh_v)
+                    visit_set.add(neigh_data)
+                           
+
     # This method takes index(i, j) and returns the element at that position from the matrix
     def getElementFromMatrix(self, m, n):
         try:
@@ -236,6 +254,8 @@ start_ind = b.getStartPos()
 end_ind = b.getEndPos()
 print(start_ind, end_ind)
 b.createEdges()
+
+b.countHeuristicStart(end_ind)
 b.displayGraphSummary()
 
 

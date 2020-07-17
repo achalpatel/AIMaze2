@@ -1,6 +1,7 @@
 # Name - Achal Patel
 # Student ID - 026598245
 from Vertex import Vertex
+import math
 
 class Graph():
     def __init__(self):
@@ -38,7 +39,7 @@ class Graph():
         print("Graph Summary :")
         
         for ver in self.get_vertices():
-            print("For vertex ",ver, "->", self.vertex[ver].get_connections())
+            print("For vertex ",ver, "->", self.vertex[ver].get_connections(), "heur-> ",self.vertex[ver].heuristic)
 
 
 

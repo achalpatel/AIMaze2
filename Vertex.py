@@ -1,10 +1,12 @@
 # Name - Achal Patel
 # Student ID - 026598245
+import math
 
 class Vertex:
     def __init__(self, data):
         super().__init__()
         self.data = data
+        self.heuristic = math.inf
         self.neighbor = {}
     
     def get_id(self):
