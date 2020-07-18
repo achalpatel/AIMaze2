@@ -22,6 +22,10 @@ class Board:
         self.char_start=char_start
         self.char_end=char_end
         self.myGraph = Graph()
+        self.readFile()
+        self.createNumberedMatrix()
+        self.getStartPos()
+        self.getEndPos()
         
 
     # Reads the input file and creates a matrix of characters named as matrix .
@@ -51,8 +55,8 @@ class Board:
             temp=list(range(low_x,high_x))
             t.append(temp)
             low_x=high_x
-
         self.number_matrix=np.array(t)
+        
 
     def createEdges(self):
         for i in range(0, self.row_size):
@@ -69,13 +73,16 @@ class Board:
                     if(j+1<=self.col_size-1 and self.matrix[i][j+1]!=self.char_obstacle):                                              
                        self.myGraph.add_edge(num, self.number_matrix[i][j+1], self.EDGE_WEIGHT)
         
+        self.countHeuristicStart()
+        
+        
     def displayGraphSummary(self):
         self.myGraph.graph_summary()
     
-    def countHeuristicStart(self, final_pos):
+    def countHeuristicStart(self):
         visit_set = set()
         queue = []
-        goal_vert = self.myGraph.vertex[final_pos]
+        goal_vert = self.myGraph.vertex[self.end_pos]
         goal_vert.heuristic = 0
         queue.append(goal_vert)
         visit_set.add(goal_vert.get_id())        
@@ -89,10 +96,11 @@ class Board:
                     visit_set.add(neigh_data)
 
 
-    def astarSearch(self, start_pos):
+    def astarSearch(self):
+        self.createEdges()
         path =[]
-        path.append(start_pos)
-        start_v = self.myGraph.vertex[start_pos]
+        path.append(self.start_pos)
+        start_v = self.myGraph.vertex[self.start_pos]
         min_value = math.inf
         min_v = None
         current_v=start_v
@@ -124,8 +132,9 @@ class Board:
             return None
         
     
-    def initFinalMat(self):
+    def createFinalMat(self):
         self.final_matrix=np.zeros((self.col_size*self.row_size, self.col_size*self.row_size))
+        self.addValues()
 
     def addValues(self):
         for i in range(0, self.row_size):
@@ -151,13 +160,15 @@ class Board:
         for i in range(0,self.row_size):
             for j in range(0, self.col_size):
                 if(self.matrix[i][j]==self.char_start):
-                    return self.number_matrix[i][j]
+                    self.end_pos = self.number_matrix[i][j]
+                    return self.end_pos
 
     def getEndPos(self):
         for i in range(0,self.row_size):
             for j in range(0, self.col_size):
                 if(self.matrix[i][j]==self.char_end):
-                    return self.number_matrix[i][j]
+                    self.start_pos = self.number_matrix[i][j]
+                    return self.start_pos
 
     def searchDFS(self, startPos, endPos):        
         path=[]
@@ -190,12 +201,12 @@ class Board:
 
     
     # BFS search traversal
-    def bfsSearch(self, startPos, endPos):
+    def bfsSearch(self):
         # visited dictionary storing value of Parent
         visited_dict={}
         queue = []
-        queue.append(startPos)
-        visited_dict[startPos]=None
+        queue.append(self.start_pos)
+        visited_dict[self.start_pos]=None
         found = False
         while queue and not found:
             pop_value = queue.pop()
@@ -205,19 +216,20 @@ class Board:
                     queue.append(i)
                     visited_dict[i]=pop_value                    
                     # print("i:",i, "dict : ",visited_dict, queue)
-                    if(i==endPos):
+                    if(i==self.end_pos):
                         found = True
                         break
         if(not found):
             print("No solution")
             return None
-        return visited_dict
+        path = self.traverseBFS(visited_dict)
+        return path
 
-    def traverseBFS(self, visited_dict, endPos):
+    def traverseBFS(self, visited_dict):
         path=[]
         complete=False
-        value = visited_dict[endPos]
-        path.append(endPos)
+        value = visited_dict[self.end_pos]
+        path.append(self.end_pos)
         path.append(value)
         while not complete:
             parent = visited_dict[value]
@@ -230,7 +242,7 @@ class Board:
 
 
     def printDots(self, path):
-        local_output = self.matrix
+        local_output = self.matrix        
         for values in path:            
             local_i, local_j = self.getIndexofNumber(values)
             local_output[local_i][local_j] = "."
@@ -266,20 +278,27 @@ class Board:
         return np.array(ones_list)
 
 
-b = Board("mediumMaze.lay","%"," ", "P", ".")
-b.readFile()
-b.createNumberedMatrix()
-start_ind = b.getStartPos()
-end_ind = b.getEndPos()
-print(start_ind, end_ind)
-b.createEdges()
+matrix_board = Board("smallMaze.lay","%"," ", "P", ".")
+graph_board = Board("smallMaze.lay","%"," ", "P", ".")
+matrix_board.createFinalMat()
 
-b.countHeuristicStart(end_ind)
-# b.displayGraphSummary()
-path = b.astarSearch(start_ind)
-printed_out = b.printDots(path)
+BFSpath = matrix_board.bfsSearch()
+ASTARpath = graph_board.astarSearch()
+print("BFS path :",BFSpath)
+
+BFSprinted_out = matrix_board.printDots(BFSpath)
+ASTARprinted_out = graph_board.printDots(ASTARpath)
+
 # np.savetxt(sys.stdout.buffer, printed_out[0], fmt="%")
-for line in printed_out:
+print("BFS OUTPUT-----------------------------------")
+for line in BFSprinted_out:
+    print(' '.join(map(str, line)))
+
+print("---------------------------------------------")
+print("---------------------------------------------")
+print("---------------------------------------------")
+print("ASTAR path :",ASTARpath)
+for line in ASTARprinted_out:
     print(' '.join(map(str, line)))
 
 
