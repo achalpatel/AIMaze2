@@ -99,21 +99,35 @@ class Board:
     def astarSearch(self):
         self.createEdges()
         path =[]
-        path.append(self.start_pos)
-        start_v = self.myGraph.vertex[self.start_pos]
+        visited_set = set()
+        visited_set.add(self.start_pos)
+        path.append(self.start_pos)        
         min_value = math.inf
         min_v = None
-        current_v=start_v
+        current_v=self.myGraph.vertex[self.start_pos]
+        max_fringe=-math.inf
+        expand_count = 0
         while min_value>=0:
-            for ver in current_v.get_connections():                            
+            fringe_count=0
+            expand_count+=1
+            for ver in current_v.get_connections():   
+                if(ver in visited_set):
+                    continue
+                visited_set.add(ver)
+                print("ver: ",ver)  
+                fringe_count+=1                
                 v = self.myGraph.vertex[ver]
                 if v.heuristic <= min_value:
                     min_v = v
                     min_value = v.heuristic
+            if(fringe_count>=max_fringe):
+                max_fringe = fringe_count
             path.append(min_v.get_id())
             if(min_value==0):
                 break            
             current_v = min_v
+        self.astarFringeSize = max_fringe
+        self.astarExpandCount = expand_count
         return path
 
     # This method takes index(i, j) and returns the element at that position from the matrix
@@ -160,15 +174,15 @@ class Board:
         for i in range(0,self.row_size):
             for j in range(0, self.col_size):
                 if(self.matrix[i][j]==self.char_start):
-                    self.end_pos = self.number_matrix[i][j]
-                    return self.end_pos
+                    self.start_pos = self.number_matrix[i][j]
+                    return self.start_pos
 
     def getEndPos(self):
         for i in range(0,self.row_size):
             for j in range(0, self.col_size):
                 if(self.matrix[i][j]==self.char_end):
-                    self.start_pos = self.number_matrix[i][j]
-                    return self.start_pos
+                    self.end_pos = self.number_matrix[i][j]
+                    return self.end_pos
 
     def searchDFS(self, startPos, endPos):        
         path=[]
@@ -202,27 +216,35 @@ class Board:
     
     # BFS search traversal
     def bfsSearch(self):
-        # visited dictionary storing value of Parent
         visited_dict={}
         queue = []
         queue.append(self.start_pos)
         visited_dict[self.start_pos]=None
         found = False
+        max_fringe = -math.inf
+        expand_count = 0
         while queue and not found:
             pop_value = queue.pop()
             # print("queueu : ",queue)
             for i in range(0, self.final_matrix[pop_value].shape[0]):
                 if(self.final_matrix[pop_value][i] == 1 and (i not in visited_dict)):                    
                     queue.append(i)
+                    print("bfs i :",i,"-fringesz:",queue)
+                    expand_count+=1
                     visited_dict[i]=pop_value                    
                     # print("i:",i, "dict : ",visited_dict, queue)
                     if(i==self.end_pos):
                         found = True
                         break
+            count_fringe = len(queue)    
+            if(count_fringe>=max_fringe):
+                max_fringe=count_fringe
         if(not found):
             print("No solution")
             return None
         path = self.traverseBFS(visited_dict)
+        self.bfsFringeSize = max_fringe
+        self.bfsExpandCount = expand_count
         return path
 
     def traverseBFS(self, visited_dict):
@@ -284,7 +306,9 @@ matrix_board.createFinalMat()
 
 BFSpath = matrix_board.bfsSearch()
 ASTARpath = graph_board.astarSearch()
-print("BFS path :",BFSpath)
+print("BFSpath :",BFSpath)
+print("BFS cost : ",len(BFSpath))
+
 
 BFSprinted_out = matrix_board.printDots(BFSpath)
 ASTARprinted_out = graph_board.printDots(ASTARpath)
@@ -293,12 +317,17 @@ ASTARprinted_out = graph_board.printDots(ASTARpath)
 print("BFS OUTPUT-----------------------------------")
 for line in BFSprinted_out:
     print(' '.join(map(str, line)))
+print("BFS Fringe size: ",matrix_board.bfsFringeSize)
+print("BFS expand count : ",matrix_board.bfsExpandCount)
 
 print("---------------------------------------------")
 print("---------------------------------------------")
 print("---------------------------------------------")
-print("ASTAR path :",ASTARpath)
+print("ASTAR cost : ",len(ASTARpath))
+print(" ASTAR Path : ",ASTARpath)
 for line in ASTARprinted_out:
     print(' '.join(map(str, line)))
+print("ASTAR Fringe Size",graph_board.astarFringeSize)
+print("ASTAR expand count : ", graph_board.astarExpandCount)
 
 
