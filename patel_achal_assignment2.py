@@ -134,7 +134,7 @@ class Board:
             if(count_fringe>=max_fringe):
                 max_fringe=count_fringe
         if(not found):
-            print("No solution")
+            print("No solution from BFS")
             return None
         path = self.traverseBFS(visited_dict)
         self.bfsFringeSize = max_fringe
@@ -191,7 +191,7 @@ class Board:
         min_value = math.inf
         min_v = None
         current_v=self.myGraph.vertex[self.start_pos]
-        max_fringe=-math.inf
+        max_fringe = 1
         expand_count = 0
         while min_value>=0:        
             expand_count+=1
@@ -204,11 +204,14 @@ class Board:
                 if v.heuristic <= min_value:
                     min_v = v
                     min_value = v.heuristic
-            if(fringe_count>=max_fringe):
-                max_fringe = fringe_count
+            # if(fringe_count>=max_fringe):
+            #     max_fringe = fringe_count
             path.append(min_v.get_id())
             if(min_value==0):
-                break            
+                break     
+            if min_v == current_v:
+                print("No solution from ASTAR")
+                return None      
             current_v = min_v
         self.astarFringeSize = max_fringe
         self.astarExpandCount = expand_count
@@ -312,13 +315,14 @@ class Board:
 
     def createASTAR(self):
         ASTARpath = self.astarSearch()
-        ASTARprinted_out = self.printDots(ASTARpath)
-        print(" ASTAR Path : ",ASTARpath)
-        print("ASTAR cost : ",len(ASTARpath))
-        print("ASTAR Fringe Size",self.astarFringeSize)
-        print("ASTAR expand count : ", self.astarExpandCount)
-        for line in ASTARprinted_out:
-            print(' '.join(map(str, line)))
+        if ASTARpath != None:
+            ASTARprinted_out = self.printDots(ASTARpath)
+            print(" ASTAR Path : ",ASTARpath)
+            print("ASTAR cost : ",len(ASTARpath))
+            print("ASTAR Fringe Size",self.astarFringeSize)
+            print("ASTAR expand count : ", self.astarExpandCount)
+            for line in ASTARprinted_out:
+                print(' '.join(map(str, line)))
 
 
 # bfs_board = Board("custom3.lay","%"," ", "P", ".")
@@ -328,7 +332,7 @@ class Board:
 # dfs_board.createFinalMat()
 
 board = Board("custom3.lay","%"," ", "P", ".")
-# board.createASTAR()
+board.createASTAR()
 print("---------------------------------------------")
 board.createBFS()
 print("---------------------------------------------")
