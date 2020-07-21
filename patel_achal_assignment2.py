@@ -118,15 +118,18 @@ class Board:
         while queue and not found:
             # print("queueu : ",queue)
             pop_value = queue.pop(0)
+            if(pop_value == self.end_pos):
+                found=True
+                break
             expand_count+=1
             for i in range(0, self.final_matrix[pop_value].shape[0]):
                 if(self.final_matrix[pop_value][i] == 1 and (i not in visited_dict)):                    
                     queue.append(i)                    
                     visited_dict[i]=pop_value                    
                     # print("i:",i, "dict : ",visited_dict, "que: ",queue)
-                    if(i==self.end_pos):
-                        found = True
-                        break
+                    # if(i==self.end_pos):
+                    #     found = True
+                    #     break
             count_fringe = len(queue)    
             if(count_fringe>=max_fringe):
                 max_fringe=count_fringe
@@ -241,6 +244,8 @@ class Board:
                     return self.end_pos    
 
     def printDots(self, path):
+        if(path==None):
+            return None
         local_output = self.matrix.copy()        
         for values in path:            
             local_i, local_j = self.getIndexofNumber(values)
@@ -286,14 +291,15 @@ class Board:
     def createBFS(self):
         self.createFinalMat()
         BFSpath = self.bfsSearch()
-        BFSprinted_out = self.printDots(BFSpath)
-        print("BFSpath :",BFSpath)
-        print("BFS cost : ",len(BFSpath))
-        print("BFS Fringe size: ",self.bfsFringeSize)
-        print("BFS expand count : ",self.bfsExpandCount)
-        print("BFS OUTPUT-----------------------------------")
-        for line in BFSprinted_out:
-            print(' '.join(map(str, line)))
+        if BFSpath != None:
+            BFSprinted_out = self.printDots(BFSpath)
+            print("BFSpath :",BFSpath)
+            print("BFS cost : ",len(BFSpath))
+            print("BFS Fringe size: ",self.bfsFringeSize)
+            print("BFS expand count : ",self.bfsExpandCount)
+            print("BFS OUTPUT-----------------------------------")
+            for line in BFSprinted_out:
+                print(' '.join(map(str, line)))
     
     def createDFS(self):
         self.createFinalMat()
@@ -321,8 +327,8 @@ class Board:
 # bfs_board.createFinalMat()
 # dfs_board.createFinalMat()
 
-board = Board("smallMaze.lay","%"," ", "P", ".")
-board.createASTAR()
+board = Board("custom3.lay","%"," ", "P", ".")
+# board.createASTAR()
 print("---------------------------------------------")
 board.createBFS()
 print("---------------------------------------------")
