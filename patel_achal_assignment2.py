@@ -116,14 +116,14 @@ class Board:
         max_fringe = -math.inf
         expand_count = 0
         while queue and not found:
-            pop_value = queue.pop()
             # print("queueu : ",queue)
+            pop_value = queue.pop(0)
+            expand_count+=1
             for i in range(0, self.final_matrix[pop_value].shape[0]):
                 if(self.final_matrix[pop_value][i] == 1 and (i not in visited_dict)):                    
                     queue.append(i)                    
-                    expand_count+=1
                     visited_dict[i]=pop_value                    
-                    # print("i:",i, "dict : ",visited_dict, queue)
+                    # print("i:",i, "dict : ",visited_dict, "que: ",queue)
                     if(i==self.end_pos):
                         found = True
                         break
@@ -322,6 +322,12 @@ class Board:
 # dfs_board.createFinalMat()
 
 board = Board("smallMaze.lay","%"," ", "P", ".")
+board.createASTAR()
+print("---------------------------------------------")
+board.createBFS()
+print("---------------------------------------------")
+# board.createDFS()
+print("---------------------------------------------")
 
 # BFSpath = bfs_board.bfsSearch()
 # BFSprinted_out = bfs_board.printDots(BFSpath)
@@ -332,12 +338,6 @@ board = Board("smallMaze.lay","%"," ", "P", ".")
 # print("BFS OUTPUT-----------------------------------")
 # for line in BFSprinted_out:
 #     print(' '.join(map(str, line)))
-board.createASTAR()
-print("---------------------------------------------")
-board.createBFS()
-print("---------------------------------------------")
-board.createDFS()
-print("---------------------------------------------")
 
 
 # ASTARpath = graph_board.astarSearch()
