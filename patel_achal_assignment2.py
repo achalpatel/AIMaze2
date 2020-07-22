@@ -182,6 +182,40 @@ class Board:
                     return True
         return False
     
+    def searchDFSusingStack(self):
+        path = []
+        stack = []
+        visited_dict={}    
+        stack.append(self.start_pos)
+        visited_dict[self.start_pos] = None
+        found = False
+        expand_count=0
+        max_fringe = -math.inf        
+        while stack and not found:
+            # print("stack :",stack)
+            pop_value = stack.pop()            
+            if(pop_value == self.end_pos):
+                found=True
+                break
+            expand_count+=1            
+            for i in range(0, self.final_matrix[pop_value].shape[0]):
+                if(self.final_matrix[pop_value][i] == 1 and (i not in visited_dict)):                    
+                    stack.append(i)                    
+                    visited_dict[i]=pop_value                    
+                    # print("i:",i, "dict : ",visited_dict, "que: ",stack)
+            count_fringe = len(stack)    
+            if(count_fringe>=max_fringe):
+                max_fringe=count_fringe
+        if(not found):
+            print("No solution from DFS")
+            return None
+        path = self.traverseBFS(visited_dict)
+        self.dfsFringe = max_fringe
+        self.dfsExpandCount = expand_count
+        return path
+
+
+
     def astarSearch(self):
         self.createEdges()
         path =[]
@@ -306,12 +340,15 @@ class Board:
     
     def createDFS(self):
         self.createFinalMat()
-        DFSpath = self.searchDFS()
-        DFSprinted_out = self.printDots(DFSpath)
-        print(" DFS path : ", DFSpath)
-        print(" DFS cost : ", len(DFSpath))
-        for line in DFSprinted_out:
-            print(' '.join(map(str, line)))
+        DFSpath = self.searchDFSusingStack()
+        if DFSpath != None:
+            DFSprinted_out = self.printDots(DFSpath)            
+            print(" DFS path : ", DFSpath)
+            print(" DFS cost : ", len(DFSpath))
+            print("DFS Fringe size: ",self.dfsFringe)
+            print("DFS expand count : ",self.dfsExpandCount)
+            for line in DFSprinted_out:
+                print(' '.join(map(str, line)))
 
     def createASTAR(self):
         ASTARpath = self.astarSearch()
@@ -331,12 +368,12 @@ class Board:
 # bfs_board.createFinalMat()
 # dfs_board.createFinalMat()
 
-board = Board("custom3.lay","%"," ", "P", ".")
+board = Board("smallMaze.lay","%"," ", "P", ".")
 board.createASTAR()
 print("---------------------------------------------")
 board.createBFS()
 print("---------------------------------------------")
-# board.createDFS()
+board.createDFS()
 print("---------------------------------------------")
 
 # BFSpath = bfs_board.bfsSearch()
