@@ -365,14 +365,6 @@ class Board:
                 print(' '.join(map(str, line)))
 
     
-
-
-# bfs_board = Board("custom3.lay","%"," ", "P", ".")
-# graph_board = Board("custom3.lay","%"," ", "P", ".")
-# dfs_board = Board("custom3.lay","%"," ", "P", ".")
-# bfs_board.createFinalMat()
-# dfs_board.createFinalMat()
-
 board = Board("smallMaze.lay","%"," ", "P", ".")
 board.createASTAR()
 print("---------------------------------------------")
@@ -381,32 +373,3 @@ print("---------------------------------------------")
 board.createDFS()
 print("---------------------------------------------")
 
-# BFSpath = bfs_board.bfsSearch()
-# BFSprinted_out = bfs_board.printDots(BFSpath)
-# print("BFSpath :",BFSpath)
-# print("BFS cost : ",len(BFSpath))
-# print("BFS Fringe size: ",bfs_board.bfsFringeSize)
-# print("BFS expand count : ",bfs_board.bfsExpandCount)
-# print("BFS OUTPUT-----------------------------------")
-# for line in BFSprinted_out:
-#     print(' '.join(map(str, line)))
-
-
-# ASTARpath = graph_board.astarSearch()
-# ASTARprinted_out = graph_board.printDots(ASTARpath)
-# print(" ASTAR Path : ",ASTARpath)
-# print("ASTAR cost : ",len(ASTARpath))
-# print("ASTAR Fringe Size",graph_board.astarFringeSize)
-# print("ASTAR expand count : ", graph_board.astarExpandCount)
-# for line in ASTARprinted_out:
-#     print(' '.join(map(str, line)))
-print("---------------------------------------------")
-print("---------------------------------------------")
-print("---------------------------------------------")
-
-# DFSpath = self.searchDFS()
-# DFSprinted_out = self.printDots(DFSpath)
-# print(" DFS path : ", DFSpath)
-# print(" DFS cost : ", len(DFSpath))
-# for line in DFSprinted_out:
-#     print(' '.join(map(str, line)))
