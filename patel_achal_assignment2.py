@@ -1,6 +1,9 @@
-# Assignment 1
-# Name - Achal Patel
-# Student Id - 026598245
+# --------------------------------------------------------------------------------
+# Assignment 2
+# Name - Achal Patel | Student Id - 026598245
+# Name - Kabir Majmudar | Student Id - 025792284
+# 
+# --------------------------------------------------------------------------------
 
 import numpy as np
 import sys
@@ -325,6 +328,17 @@ class Board:
         
         return np.array(ones_list)
 
+    def createASTAR(self):
+        ASTARpath = self.astarSearch()
+        if ASTARpath != None:
+            ASTARprinted_out = self.printDots(ASTARpath)
+            print(" ASTAR Path : ",ASTARpath.reverse())
+            print("ASTAR cost : ",len(ASTARpath))
+            print("ASTAR Fringe Size",self.astarFringeSize)
+            print("ASTAR expand count : ", self.astarExpandCount)
+            for line in ASTARprinted_out:
+                print(' '.join(map(str, line)))
+
     def createBFS(self):
         self.createFinalMat()
         BFSpath = self.bfsSearch()
@@ -350,16 +364,7 @@ class Board:
             for line in DFSprinted_out:
                 print(' '.join(map(str, line)))
 
-    def createASTAR(self):
-        ASTARpath = self.astarSearch()
-        if ASTARpath != None:
-            ASTARprinted_out = self.printDots(ASTARpath)
-            print(" ASTAR Path : ",ASTARpath)
-            print("ASTAR cost : ",len(ASTARpath))
-            print("ASTAR Fringe Size",self.astarFringeSize)
-            print("ASTAR expand count : ", self.astarExpandCount)
-            for line in ASTARprinted_out:
-                print(' '.join(map(str, line)))
+    
 
 
 # bfs_board = Board("custom3.lay","%"," ", "P", ".")
