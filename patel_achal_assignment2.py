@@ -109,6 +109,12 @@ class Board:
                     queue.append(neigh_v)
                     visit_set.add(neigh_data)
 
+    def countHeuristic2(self):        
+        end = self.end_pos
+        end_i, end_j = self.getIndexofNumber(end)
+        
+
+
     # BFS search traversal
     def bfsSearch(self):
         visited_dict={}
