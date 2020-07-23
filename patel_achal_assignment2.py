@@ -332,7 +332,7 @@ class Board:
         ASTARpath = self.astarSearch()
         if ASTARpath != None:
             ASTARprinted_out = self.printDots(ASTARpath)
-            print(" ASTAR Path : ",ASTARpath.reverse())
+            print(" ASTAR Path : ",ASTARpath)
             print("ASTAR cost : ",len(ASTARpath))
             print("ASTAR Fringe Size",self.astarFringeSize)
             print("ASTAR expand count : ", self.astarExpandCount)
@@ -365,7 +365,7 @@ class Board:
                 print(' '.join(map(str, line)))
 
     
-board = Board("smallMaze.lay","%"," ", "P", ".")
+board = Board("mediumMaze.lay","%"," ", "P", ".")
 board.createASTAR()
 print("---------------------------------------------")
 board.createBFS()
