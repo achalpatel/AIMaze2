@@ -56,11 +56,13 @@ class Board:
             t.append(temp)
             low_x=high_x
         self.number_matrix=np.array(t)
-        
+
+    # Initializes the Final matrix with zeros 
     def createFinalMat(self):
         self.final_matrix=np.zeros((self.col_size*self.row_size, self.col_size*self.row_size))
         self.addValues()
 
+    # Adds the values in the Final matrix based on the relationship with the adjacent matrix cells
     def addValues(self):
         for i in range(0, self.row_size):
             for j in range(0, self.col_size):
@@ -76,6 +78,7 @@ class Board:
                     if(j+1<=self.col_size-1 and self.matrix[i][j+1]!=self.char_obstacle):                       
                        self.final_matrix[num][self.number_matrix[i][j+1]] = 1
 
+    # Creates edges for the graph based on the adjacent cells
     def createEdges(self):
         for i in range(0, self.row_size):
             for j in range(0, self.col_size):
@@ -92,7 +95,8 @@ class Board:
                        self.myGraph.add_edge(num, self.number_matrix[i][j+1], self.EDGE_WEIGHT)
         
         self.countHeuristicStart()
-            
+    
+    # Counts the heuristic values of each Vertices in a graph 
     def countHeuristicStart(self):
         visit_set = set()
         queue = []
@@ -109,10 +113,6 @@ class Board:
                     queue.append(neigh_v)
                     visit_set.add(neigh_data)
 
-    def countHeuristic2(self):        
-        end = self.end_pos
-        end_i, end_j = self.getIndexofNumber(end)
-        
 
 
     # BFS search traversal
@@ -150,6 +150,7 @@ class Board:
         self.bfsExpandCount = expand_count
         return path
 
+
     def traverseBFS(self, visited_dict):
         path=[]
         complete=False
@@ -165,6 +166,8 @@ class Board:
                 path.pop()
         return path
 
+
+    # DFS search traversal
     def searchDFS(self):        
         path=[]        
         visited=set()
@@ -190,7 +193,8 @@ class Board:
                     path.append(i)                    
                     return True
         return False
-    
+
+    # Dfs search traversal maintaining the fringe 
     def searchDFSusingStack(self):
         path = []
         stack = []
@@ -224,7 +228,7 @@ class Board:
         return path
 
 
-
+    # AStar search
     def astarSearch(self):
         self.createEdges()
         path =[]
@@ -267,6 +271,7 @@ class Board:
         except IndexError:
             return None
 
+    # Returns the index of the number represented in the numbered matrix
     def getIndexofNumber(self, number):
         try:
             index_i = number//self.col_size
@@ -274,7 +279,8 @@ class Board:
             return (index_i, index_j)
         except IndexError:
             return None
-
+            
+    # Returns the starting position of the maze
     def getStartPos(self):
         for i in range(0,self.row_size):
             for j in range(0, self.col_size):
@@ -282,6 +288,7 @@ class Board:
                     self.start_pos = self.number_matrix[i][j]
                     return self.start_pos
 
+    # Returns the ending position of the maze
     def getEndPos(self):
         for i in range(0,self.row_size):
             for j in range(0, self.col_size):
@@ -289,6 +296,7 @@ class Board:
                     self.end_pos = self.number_matrix[i][j]
                     return self.end_pos    
 
+    # Taking a path list and creating a output array for including a dot representation of the answer
     def printDots(self, path):
         if(path==None):
             return None
@@ -298,42 +306,45 @@ class Board:
             local_output[local_i][local_j] = "."
         return np.array(local_output)
     
+    # Prints the final matrix
     def printFinalMatrix(self):
         for i in range(0, self.final_matrix.shape[0]):
             print("index = ",i, self.final_matrix[i])
     
+    # Displays the graph summary
     def displayGraphSummary(self):
         self.myGraph.graph_summary()    
 
     # Testing purpose
-    def getOnesPos(self):
-        l=[]
-        for i in range(0, self.final_matrix.shape[0]):
-            for j in range(0, self.final_matrix.shape[1]):
-                if(self.final_matrix[i][j]==1):
-                    l.append((i,j))
-        return np.array(l)
+    # def getOnesPos(self):
+    #     l=[]
+    #     for i in range(0, self.final_matrix.shape[0]):
+    #         for j in range(0, self.final_matrix.shape[1]):
+    #             if(self.final_matrix[i][j]==1):
+    #                 l.append((i,j))
+    #     return np.array(l)
     
     # Testing purpose
-    def readAnswerMatrix(self, file):
-        f = open(file, 'r')
-        arr=[]
-        for line in f:
-            temp=[]
-            for i in line:
-                if(i!="\n" and i!="\t"):
-                    temp.append(i)
-                td=list(temp)
-            arr.append(td)
-        ans_arr=np.array(arr)
-        ones_list=[]
-        for i in range(0,ans_arr.shape[0]):
-            for j in range(0, ans_arr.shape[1]):
-                if(ans_arr[i][j]=='1'):
-                    ones_list.append((i,j))
+    # def readAnswerMatrix(self, file):
+    #     f = open(file, 'r')
+    #     arr=[]
+    #     for line in f:
+    #         temp=[]
+    #         for i in line:
+    #             if(i!="\n" and i!="\t"):
+    #                 temp.append(i)
+    #             td=list(temp)
+    #         arr.append(td)
+    #     ans_arr=np.array(arr)
+    #     ones_list=[]
+    #     for i in range(0,ans_arr.shape[0]):
+    #         for j in range(0, ans_arr.shape[1]):
+    #             if(ans_arr[i][j]=='1'):
+    #                 ones_list.append((i,j))
         
-        return np.array(ones_list)
+    #     return np.array(ones_list)
 
+    # Calls an Astar search
     def createASTAR(self):
         ASTARpath = self.astarSearch()
         if ASTARpath != None:
@@ -345,6 +356,7 @@ class Board:
             for line in ASTARprinted_out:
                 print(' '.join(map(str, line)))
 
+    # Calls a BFS search
     def createBFS(self):
         self.createFinalMat()
         BFSpath = self.bfsSearch()
@@ -358,6 +370,7 @@ class Board:
             for line in BFSprinted_out:
                 print(' '.join(map(str, line)))
     
+    # Calls a DFS search
     def createDFS(self):
         self.createFinalMat()
         DFSpath = self.searchDFSusingStack()
